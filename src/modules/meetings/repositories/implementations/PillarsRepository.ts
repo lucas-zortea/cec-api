@@ -1,5 +1,5 @@
-import { Pillar } from '../model/Pillar'
-import { IPillarRepository, ICreatePillarDTO } from './IPillarRepository';
+import { Pillar } from '../../model/Pillar'
+import { IPillarRepository, ICreatePillarDTO } from '../IPillarsRepository';
 
 
 
@@ -7,9 +7,19 @@ class PillarsRepository implements IPillarRepository {
 
     private pillars: Pillar[];
 
-    constructor() {
+    private static INSTANCE: PillarsRepository;
+
+    private constructor() {
         this.pillars = [];
     }
+
+    public static getInstance(): PillarsRepository{
+        if(!PillarsRepository.INSTANCE){
+            PillarsRepository.INSTANCE = new PillarsRepository();
+        }
+
+        return PillarsRepository.INSTANCE;
+    };
 
     create({ description, name }: ICreatePillarDTO): void {
         const pillar = new Pillar()

@@ -1,27 +1,26 @@
 import { Router } from 'express';
+import multer from 'multer';
 
-import { PillarsRepository } from '../repositories/PillarsRepository';
-import { PostgresPillarRepository } from '../repositories/PostgresPillarRepository';
-import { CreatePillarService } from '../services/CreatePillarService';
+import { createPillarContoller } from '../modules/meetings/useCases/createPillar';
+import { importPillarController } from '../modules/meetings/useCases/importPillar';
+import { listPillarsController } from '../modules/meetings/useCases/listPillars';
 
 const pillarRouters = Router();
-const pillarsRepository = new PostgresPillarRepository()
 
+const upload = multer({
+    dest: "./tmp"
+});
 
 pillarRouters.post("/", (request, response) => {
-    const { name, description } = request.body;
-
-    const createPillarService = new CreatePillarService(pillarsRepository);
-
-    createPillarService.execute({ name, description });
-
-    return response.status(201).send();
+    return createPillarContoller.handle(request, response);
 });
 
 pillarRouters.get("/", (request, response) => {
-    const all = pillarsRepository.list()
-    
-    return response.json(all);
-})
+    return listPillarsController.handle(request, response);
+});
+
+pillarRouters.post("/import", upload.single("file"), (request, response) => {
+    return importPillarController.handle(request, response);
+});
 
 export { pillarRouters };

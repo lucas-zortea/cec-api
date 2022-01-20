@@ -1,5 +1,4 @@
-import { IPillarRepository } from "../repositories/IPillarRepository";
-import { PillarsRepository } from "../repositories/PillarsRepository";
+import { IPillarRepository } from "../../repositories/IPillarsRepository";
 
 
 interface IRequest {
@@ -7,7 +6,7 @@ interface IRequest {
     description: string;
 }
 
-class CreatePillarService {
+class CreatePillarUseCase {
 
     constructor(private pillarsRepository: IPillarRepository) {}
 
@@ -23,4 +22,4 @@ class CreatePillarService {
 
 }
 
-export { CreatePillarService }
+export { CreatePillarUseCase }
