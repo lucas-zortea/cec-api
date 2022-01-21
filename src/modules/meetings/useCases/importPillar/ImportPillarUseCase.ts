@@ -1,14 +1,18 @@
 import fs from 'fs';
 import { parse as csvParse } from "csv-parse";
 import { IPillarRepository } from '../../repositories/IPillarsRepository';
+import { inject, injectable } from 'tsyringe';
 
 interface IImportPillar {
     name: string,
     description: string
 }
 
+@injectable()
 class ImportPillarUseCase{
-    constructor(private pillarsRepository: IPillarRepository) {}
+    constructor(
+        @inject("PillarsRepository")
+        private pillarsRepository: IPillarRepository) {}
 
     loadPillars(file: Express.Multer.File): Promise<IImportPillar[]> { // : IImportPillar[]
         return new Promise((resolve, reject) => {
@@ -42,10 +46,10 @@ class ImportPillarUseCase{
         pillars.map(async (pillar) => {
             const { name, description } = pillar;
 
-            const existsPillar = this.pillarsRepository.findByName(name);
+            const existsPillar = await this.pillarsRepository.findByName(name);
 
             if(!existsPillar){
-                this.pillarsRepository.create({
+                await this.pillarsRepository.create({
                     name,
                     description
                 })

@@ -1,4 +1,4 @@
-import { Classroom } from "../model/Classroom";
+import { Classroom } from "../entities/Classroom";
 
 
 interface ICreateClassroomDTO{
@@ -8,8 +8,8 @@ interface ICreateClassroomDTO{
 }
 
 interface IClassroomsRepository{
-    create({ capacity, description, name }: ICreateClassroomDTO): void;
-    findByName(name: string): Classroom;
+    create({ capacity, description, name }: ICreateClassroomDTO): Promise<void>;
+    findByName(name: string): Promise<Classroom>;
 }
 
 export { ICreateClassroomDTO, IClassroomsRepository }

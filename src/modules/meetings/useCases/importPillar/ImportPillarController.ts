@@ -1,12 +1,19 @@
+import "reflect-metadata";
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
+
 import { ImportPillarUseCase } from './ImportPillarUseCase';
 
 class ImportPillarController{
-    constructor(private importPillarUseCase: ImportPillarUseCase) {}
+    
 
-    handle(request: Request, response: Response): Response {
+    async handle(request: Request, response: Response): Promise<Response> {
         const { file } = request;
-        this.importPillarUseCase.execute(file);
+
+        const importPillarUseCase = container.resolve(ImportPillarUseCase)
+
+        await importPillarUseCase.execute(file);
+
         return response.send();
     }
 }

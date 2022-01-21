@@ -1,29 +1,29 @@
-import { Classroom } from "../../model/Classroom";
+import { getRepository, Repository } from "typeorm";
+import { Classroom } from "../../entities/Classroom";
 import { IClassroomsRepository, ICreateClassroomDTO } from "../IClassroomsRepository";
 
 
 class ClassroomsRepository implements IClassroomsRepository {
-    private classrooms: Classroom[];
+    private repository: Repository<Classroom>
 
     constructor(){
-        this.classrooms = [];
+        this.repository = getRepository(Classroom);
     }
 
-    create({ capacity, description, name }: ICreateClassroomDTO): void {
-        const classroom = new Classroom();
-
-        Object.assign(classroom, {
-            name,
-            description,
+    async create({ capacity, description, name }: ICreateClassroomDTO): Promise<void> {
+        const classroom = this.repository.create({
             capacity,
-            created_at: new Date()
+            description,
+            name
         });
 
-        this.classrooms.push(classroom);
+        await this.repository.save(classroom);
     }
 
-    findByName(name: string): Classroom {
-        const classroom = this.classrooms.find(classroom => classroom.name == name);
+    async findByName(name: string): Promise<Classroom> {
+        const classroom = this.repository.findOne({
+            name
+        })
         return classroom;
     }
 

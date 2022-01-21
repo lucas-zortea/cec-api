@@ -1,13 +1,17 @@
+import "reflect-metadata";
 import { Response, Request } from 'express';
+import { container } from 'tsyringe';
+
 import { CreatePillarUseCase } from './CreatePillarUseCase';
 
 class CreatePillarController{
-    constructor(private createPillarUseCase: CreatePillarUseCase) {}
 
-    handle(request: Request, response: Response): Response{
+    async handle(request: Request, response: Response): Promise<Response>{
         const { name, description } = request.body;
-    
-        this.createPillarUseCase.execute({ name, description });
+
+        const createPillarUseCase = container.resolve(CreatePillarUseCase);
+
+        await createPillarUseCase.execute({ name, description });
     
         return response.status(201).send();
     }

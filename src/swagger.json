@@ -11,11 +11,13 @@
     "paths": {
         "/pillars": {
             "post": {
-                "tags": ["Pillar"],
+                "tags": [
+                    "Pillar"
+                ],
                 "summary": "Create a pillar",
                 "description": "Create a new pillar",
                 "requestBody": {
-                    "content":  {
+                    "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
@@ -45,8 +47,10 @@
                 }
             },
             "get": {
-                "tags": ["Pillar"],
-                "summary":"List all pillars",
+                "tags": [
+                    "Pillar"
+                ],
+                "summary": "List all pillars",
                 "description": "List all pillars",
                 "responses": {
                     "200": {
@@ -56,13 +60,13 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "type":"object",
+                                        "type": "object",
                                         "properties": {
                                             "name": {
-                                                "type":"string"
+                                                "type": "string"
                                             },
                                             "description": {
-                                                "type":"string"
+                                                "type": "string"
                                             }
                                         }
                                     }
@@ -70,7 +74,46 @@
                             }
                         }
                     }
-
+                }
+            }
+        },
+        "/classromms": {
+            "post": {
+                "tags": [
+                    "Classrooms"
+                ],
+                "summary": "Create a classroom",
+                "description": "Create a new classroom",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Classroom"
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Created"
+                },
+                "500": "Classroom already exists!"
+            }
+        }
+    },
+    "definitions": {
+        "Classroom": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "capacity": {
+                    "type": "integer"
                 }
             }
         }

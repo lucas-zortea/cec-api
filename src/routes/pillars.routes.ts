@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import multer from 'multer';
-
-import { createPillarContoller } from '../modules/meetings/useCases/createPillar';
-import { importPillarController } from '../modules/meetings/useCases/importPillar';
-import { listPillarsController } from '../modules/meetings/useCases/listPillars';
+import { CreatePillarController } from '../modules/meetings/useCases/createPillar/CreatePillarContoller'
+import { ImportPillarController } from '../modules/meetings/useCases/importPillar/ImportPillarController';
+import { ListPillarsController } from '../modules/meetings/useCases/listPillars/ListPillarsController';
 
 const pillarRouters = Router();
 
@@ -11,16 +10,16 @@ const upload = multer({
     dest: "./tmp"
 });
 
-pillarRouters.post("/", (request, response) => {
-    return createPillarContoller.handle(request, response);
-});
+const createPillarController = new CreatePillarController();
 
-pillarRouters.get("/", (request, response) => {
-    return listPillarsController.handle(request, response);
-});
+const importPillarController = new ImportPillarController();
 
-pillarRouters.post("/import", upload.single("file"), (request, response) => {
-    return importPillarController.handle(request, response);
-});
+const listPillarController = new ListPillarsController();
+
+pillarRouters.post("/", createPillarController.handle);
+
+pillarRouters.get("/", listPillarController.handle);
+
+pillarRouters.post("/import", importPillarController.handle);
 
 export { pillarRouters };

@@ -1,14 +1,17 @@
+import "reflect-metadata";
+import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import { CreateClassroomUseCase } from './CreateClassroomUseCase';
 
 class CreateClassroomController{
 
-    constructor(private createClassroomUseCase: CreateClassroomUseCase){}
 
-    handle(request: Request, response: Response): Response {
+    async handle(request: Request, response: Response): Promise<Response> {
         const { name, description, capacity } = request.body;
+
+        const createClassroomUseCase = container.resolve(CreateClassroomUseCase)
     
-        this.createClassroomUseCase.execute({ name, description, capacity });
+        await createClassroomUseCase.execute({ name, description, capacity });
     
         return response.status(201).send();
     }

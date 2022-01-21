@@ -1,11 +1,15 @@
+import "reflect-metadata";
+import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import { ListPillarsUseCase } from './ListPillarsUseCase';
 
 class ListPillarsController {
-    constructor(private listPillarUseCase: ListPillarsUseCase) {}
+    
 
-    handle(request: Request, response: Response): Response{
-        const all = this.listPillarUseCase.execute();
+    async handle(request: Request, response: Response): Promise<Response>{
+        const listPillarUseCase = container.resolve(ListPillarsUseCase)
+
+        const all = await listPillarUseCase.execute();
     
         return response.json(all);
     }

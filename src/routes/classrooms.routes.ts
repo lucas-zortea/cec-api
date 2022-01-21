@@ -1,10 +1,13 @@
 import { Router } from 'express';
-import { createClassroomController } from '../modules/meetings/useCases/createClassroom';
+import { ensuredAuthenticated } from '../middlewares/ensureAlthenticated';
+import { CreateClassroomController } from '../modules/meetings/useCases/createClassroom/CreateClassroomController';
 
 const classroomsRouter = Router();
 
-classroomsRouter.post("/", (request, response) => {
-    return createClassroomController.handle(request, response);
-})
+const createClassroomController = new CreateClassroomController();
+
+classroomsRouter.use(ensuredAuthenticated);
+
+classroomsRouter.post("/", createClassroomController.handle);
 
 export { classroomsRouter };

@@ -1,12 +1,16 @@
-import { Pillar } from "../../model/Pillar";
+import { inject, injectable } from "tsyringe";
+import { Pillar } from "../../entities/Pillar";
 import { IPillarRepository } from "../../repositories/IPillarsRepository";
 
+@injectable()
 class ListPillarsUseCase {
 
-    constructor(private pillarsRepository: IPillarRepository) { }
+    constructor(
+        @inject("PillarsRepository")
+        private pillarsRepository: IPillarRepository) { }
 
-    execute(): Pillar[] {
-        const pillars = this.pillarsRepository.list();
+    async execute(): Promise<Pillar[]> {
+        const pillars = await this.pillarsRepository.list();
 
         return pillars;
     }

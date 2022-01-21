@@ -1,3 +1,6 @@
+import { inject, injectable } from 'tsyringe';
+import { AppError } from '../../../../errors/AppError';
+
 import { IPillarRepository } from "../../repositories/IPillarsRepository";
 
 
@@ -6,15 +9,18 @@ interface IRequest {
     description: string;
 }
 
+@injectable()
 class CreatePillarUseCase {
 
-    constructor(private pillarsRepository: IPillarRepository) {}
+    constructor(
+        @inject("PillarsRepository")
+        private pillarsRepository: IPillarRepository) {}
 
-    execute({ description, name }: IRequest): void {
-        const pillarAlreadyExists = this.pillarsRepository.findByName(name);
+    async execute({ description, name }: IRequest): Promise<void> {
+        const pillarAlreadyExists = await this.pillarsRepository.findByName(name);
 
         if (pillarAlreadyExists) {
-            throw new Error("Category already exists!")
+            throw new AppError("Pillar already exists!")
         }
 
         this.pillarsRepository.create({ name, description })

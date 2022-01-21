@@ -1,44 +1,34 @@
-import { Pillar } from '../../model/Pillar'
+import { Pillar } from '../../entities/Pillar'
 import { IPillarRepository, ICreatePillarDTO } from '../IPillarsRepository';
+
+import { getRepository, Repository } from 'typeorm';
 
 
 
 class PillarsRepository implements IPillarRepository {
 
-    private pillars: Pillar[];
+    private repository: Repository<Pillar>;
 
-    private static INSTANCE: PillarsRepository;
-
-    private constructor() {
-        this.pillars = [];
+    constructor() {
+        this.repository = getRepository(Pillar);
     }
 
-    public static getInstance(): PillarsRepository{
-        if(!PillarsRepository.INSTANCE){
-            PillarsRepository.INSTANCE = new PillarsRepository();
-        }
-
-        return PillarsRepository.INSTANCE;
-    };
-
-    create({ description, name }: ICreatePillarDTO): void {
-        const pillar = new Pillar()
-
-        Object.assign(pillar, {
-            name,
+    async create({ description, name }: ICreatePillarDTO): Promise<void> {
+        const pillar = this.repository.create({
             description,
-            created_at: new Date()
-        })
+            name
+        });
 
-        this.pillars.push(pillar);
+        await this.repository.save(pillar);
     }
 
-    list(): Pillar[] {
-        return this.pillars
+    async list(): Promise<Pillar[]> {
+        const pillars = await this.repository.find();
+        return pillars;
     }
 
-    findByName(name: string): Pillar {
-        const pillar = this.pillars.find((pillar) => pillar.name === name);
+    async findByName(name: string): Promise<Pillar> {
+        const pillar = await this.repository.findOne({ name })
         return pillar;
     }
 }

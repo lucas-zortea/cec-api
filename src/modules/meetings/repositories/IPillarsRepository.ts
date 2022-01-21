@@ -1,4 +1,4 @@
-import { Pillar } from "../model/Pillar";
+import { Pillar } from "../entities/Pillar";
 
 interface ICreatePillarDTO {
     name: string;
@@ -7,9 +7,9 @@ interface ICreatePillarDTO {
 
 
 interface IPillarRepository{
-    findByName(name: string): Pillar;
-    list(): Pillar[];
-    create({ name, description }: ICreatePillarDTO): void;
+    findByName(name: string): Promise<Pillar>;
+    list(): Promise<Pillar[]>;
+    create({ name, description }: ICreatePillarDTO): Promise<void>;
 }
 
 export { IPillarRepository, ICreatePillarDTO };
